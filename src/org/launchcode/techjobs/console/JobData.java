@@ -10,6 +10,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.lang.*;
+import java.util.Collections;
 
 /**
  * Created by LaunchCode
@@ -76,7 +79,8 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            // toLowerCase to make case insensitive.
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
@@ -84,9 +88,31 @@ public class JobData {
         return jobs;
     }
 
-    /**
-     * Read in data from a CSV file and store it in a list
-     */
+    public static ArrayList<HashMap<String, String>> findByValue(String value) {
+
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        // Enables the ability to query all fields/columns/variables in job_data.csv.
+        // Loop terminates after finding all case insensitive matches.
+        // Results stored in findByValue method, and called in 'main' in TechJobs class file.
+        for (HashMap<String, String> values : allJobs) {
+            String aValue = values.get(value);
+            for(String enteredValue : values.keySet()) {
+                if (values.get(enteredValue).toLowerCase().contains(value.toLowerCase())) {
+                    jobs.add(values);
+                    break;
+                }
+            }
+        }
+
+        return jobs;
+    }
+
+        /**
+         * Read in data from a CSV file and store it in a list
+         */
     private static void loadData() {
 
         // Only load data once
